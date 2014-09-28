@@ -12,15 +12,18 @@ import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 
 import vraptor.external.configuration.Config;
+import br.com.caelum.vraptor.controller.ControllerMethod;
 /**
  * Loads the view based on controller's method name.
  * @author Leandro Tomaz Andre
- *
  */
 @RequestScoped
 public class ExternalTemplateLoader {
-    private String resourceExtension = Config.getDefaultViewExtension();
+    private static final String CONTROLLER_SUFFIX = "Controller";
+
     @Inject private Router router;
+
+    private String resourceExtension = Config.getDefaultViewExtension(); 
 
     /**
      * @deprecated CDI eyes only
@@ -40,16 +43,19 @@ public class ExternalTemplateLoader {
         return this;
     }
 
-    public String load(String callerMethod) throws FileNotFoundException {
-        return getTemplateContent(callerMethod);
+    public String load(ControllerMethod method) throws FileNotFoundException {
+        String resourceName = method.getMethod().getName();
+        String resourceController = method.getController().getType().getSimpleName();
+
+        return getTemplateContent(resourceController, resourceName);
     }
 
-    private String getTemplateContent(String fileName) throws FileNotFoundException {
-        StringBuilder resourceName = new StringBuilder()
-        .append(fileName)
+    private String getTemplateContent(String resourceController, String resourceName) throws FileNotFoundException {
+        StringBuilder fileName = new StringBuilder()
+        .append(resourceName)
         .append(resourceExtension);
 
-        File resource = new File(router.getRouteFor(resourceName.toString()));
+        File resource = new File(router.getRouteFor(getResourceFolder(resourceController), fileName.toString()));
         String resourceContent = null;
         InputStream stream = new FileInputStream(resource);
 
@@ -63,5 +69,9 @@ public class ExternalTemplateLoader {
         }
 
         return resourceContent;
+    }
+
+    private String getResourceFolder(String controllerName) {
+        return controllerName.replaceAll(CONTROLLER_SUFFIX, "").toLowerCase();
     }
 }

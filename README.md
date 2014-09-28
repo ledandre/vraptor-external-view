@@ -8,7 +8,7 @@ vraptor-external-view allows you to develop system's front-end layer separated o
 <dependency>
     <groupId>br.com.caelum</groupId>
     <artifactId>vraptor-external-view</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -39,11 +39,11 @@ public class HelloController {
   public void hello(String message) {
     result.include("message", message);
   }
-  
+ 
   
   /*
   * This method will return an external resource in the path
-  * /path/to/the/view/files/externalHello.vm
+  * /path/to/the/view/files/externalHello.jsp
   */
   @Get
   @Path("/external/hello/{message}")
@@ -53,3 +53,8 @@ public class HelloController {
   }
 }
 ```
+You can also set the view's ContentType. Default content-type is text/html.
+e.g.:
+```java
+@ExternalView(contentType = "text/html")
+public void clientForm() {}

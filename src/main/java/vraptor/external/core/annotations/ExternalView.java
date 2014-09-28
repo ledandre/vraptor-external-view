@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExternalView {}
+public @interface ExternalView {
+	String contentType() default "text/html";
+}

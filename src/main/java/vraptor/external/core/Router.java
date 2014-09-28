@@ -21,11 +21,14 @@ public class Router {
     @Deprecated
     protected Router() {}
 
-    public String getRouteFor(String fileName) {
+    public String getRouteFor(String resourceFolder, String fileName) {
         return new StringBuilder()
             .append(defaultExternalTemplatesPath)
             .append(File.separator)
-            .append(fileName).toString();
+            .append(resourceFolder)
+            .append(File.separator)
+            .append(fileName)
+            .toString();
     }
 
     /**

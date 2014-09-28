@@ -31,13 +31,15 @@ public class RequestInterceptor {
     @Inject ExternalTemplateLoader externalViewLoader;
 
     @AroundCall
-    @SuppressWarnings("unused")
     public void intercepts(SimpleInterceptorStack stack, ControllerMethod method) {
         LOGGER.info("Intercepting method {}", method.getMethod().getName());
+        String contentType = method.getMethod().getAnnotation(ExternalView.class).contentType();
+
         String externalViewContent;
         try {
-            externalViewContent = externalViewLoader.load(method.getMethod().getName());
-            result.use(Results.http()).body(externalViewContent);
+            externalViewContent = externalViewLoader.load(method);
+            result.use(Results.http()).addHeader("Content-Type", contentType).body(externalViewContent);
+
         } catch (FileNotFoundException e) {
             LOGGER.error("Cannot find the required resource", e);
             result.use(Results.http()).sendError(404, "Cannot find the required resource");
