@@ -18,7 +18,7 @@ To load views outside of your vraptor based project, you need to follow two step
 - Create a configuration file named `vraptor-external.properties` in your resources dir with the following keys:
 ```properties
 default.view.path /path/to/the/view/files
-default.view.extension .vm
+default.view.extension .jsp
 ```
 
 - So, all you have to do is add the `@ExternalView` annotation in the controller's method that you want to return an external view. 
